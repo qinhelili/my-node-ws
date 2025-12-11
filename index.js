@@ -42,6 +42,7 @@ const GetISP = async () => {
         const response1 = await axios.get('https://ipapi.co/json/', { timeout: 3000 });
         if (response1.data && response1.data.country_code && response1.data.org) {
             ISP = `${response1.data.country_code}_${response1.data.org}`;
+            return
         }
     } catch (error) {
         try {
@@ -49,6 +50,7 @@ const GetISP = async () => {
             const response2 = await axios.get('http://ip-api.com/json/', { timeout: 3000 });
             if (response2.data && response2.data.status === 'success' && response2.data.countryCode && response2.data.org) {
                 ISP = `${response2.data.countryCode}_${response2.data.org}`;
+                return
             }
         } catch (error) {
             // console.error('Backup API also failed');
