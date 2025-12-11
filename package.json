@@ -1,10 +1,11 @@
 {
-  "name": "nodews",
+  "name": "blog",
   "version": "1.0.0",
-  "description": "Nodejs-server",
+  "description": "This is a blog project",
   "main": "index.min.js",
   "private": false,
   "scripts": {
+    "dev": "node index.js",
     "start": "node index.min.js",
     "encrypted1": "node secret-hug-direct.js",
     "encrypted2": "node secret-hug-cf.js"
