@@ -9,3 +9,4 @@ deploy-*.md
 node_modules/
 /target
 /dist
+secret.txt
