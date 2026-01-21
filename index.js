@@ -8,33 +8,41 @@ const crypto = require('crypto');
 const { Buffer } = require('buffer');
 const { exec, execSync } = require('child_process');
 const { WebSocket, createWebSocketStream } = require('ws');
-let UUID = process.env.A || process.env.UUID || '1dfa68d1-6990-4498-87fc-de477da98c87'; // 运行哪吒v1,在不同的平台需要改UUID,否则会被覆盖
-const NEZHA_SERVER = process.env.NEZHA_SERVER || '';       // 哪吒v1填写形式：nz.abc.com:8008   哪吒v0填写形式：nz.abc.com
-const NEZHA_PORT = process.env.NEZHA_PORT || '';           // 哪吒v1没有此变量，v0的agent端口为{443,8443,2096,2087,2083,2053}其中之一时开启tls
-const NEZHA_KEY = process.env.NEZHA_KEY || '';             // v1的NZ_CLIENT_SECRET或v0的agent端口
-let DOMAIN = process.env.B || process.env.DOMAIN || '1234.abc.com';       // 填写项目域名或已反代的域名，不带前缀，建议填已反代的域名
+let UUID = process.env.B || process.env.UUID || '1dfa68d1-6990-4498-87fc-de477da98c87'; // 运行哪吒v1,在不同的平台需要改UUID,否则会被覆盖
+let NEZHA_SERVER = process.env.N1 || process.env.NEZHA_SERVER || '';       // 哪吒v1填写形式：nz.abc.com:8008   哪吒v0填写形式：nz.abc.com
+let NEZHA_PORT = process.env.N2 || process.env.NEZHA_PORT || '';           // 哪吒v1没有此变量，v0的agent端口为{443,8443,2096,2087,2083,2053}其中之一时开启tls
+let NEZHA_KEY = process.env.N3 || process.env.NEZHA_KEY || '';             // v1的NZ_CLIENT_SECRET或v0的agent端口
+let DOMAIN = process.env.F || process.env.DOMAIN || '1234.abc.com';       // 填写项目域名或已反代的域名，不带前缀，建议填已反代的域名
 const AUTO_ACCESS = process.env.AUTO_ACCESS || true;       // 是否开启自动访问保活,false为关闭,true为开启,需同时填写DOMAIN变量
 const WSPATH = process.env.WSPATH || UUID.slice(0, 8);     // 节点路径，默认获取uuid前8位
-let SUB_PATH = process.env.C || process.env.SUB_PATH || 'sub';            // 获取节点的订阅路径
-let NAME = process.env.D || process.env.NAME || 'node';                    // 节点名称
+let SUB_PATH = process.env.A || process.env.SUB_PATH || 'sub';            // 获取节点的订阅路径
+let NAME = process.env.E || process.env.NAME || 'node';                    // 节点名称
 //huggingface space端 docker镜像的端口默认要求是 7860
 //若要修改,则参考 https://huggingface.co/docs/hub/spaces-config-reference
-const PORT = process.env.E || process.env.PORT || 7860;                     // http和ws服务端口
+const PORT = process.env.Z1 || process.env.PORT || 7860;                     // http和ws服务端口
 
 //解密
 const key = crypto.createHash("sha256").update("bbMXwj24nhu73o4A").digest() // 生成 32 字节密钥
 const iv = Buffer.from("GddgwiSJj4hHsw72") // 固定 16 字节 IV（也可自定义）
 function decrypt(encrypted) {
-    let encryptedBuf = Buffer.from(encrypted, "base64")
-    let decipher = crypto.createDecipheriv("aes-256-cbc", key, iv)
-    let decrypted = decipher.update(encryptedBuf)
-    decrypted = Buffer.concat([decrypted, decipher.final()])
-    return decrypted.toString("utf8")
+    if (encrypted.startsWith("logan_ecd_")){
+        encrypted = encrypted.replace(/^logan_ecd_/,"");
+        let encryptedBuf = Buffer.from(encrypted, "base64")
+        let decipher = crypto.createDecipheriv("aes-256-cbc", key, iv)
+        let decrypted = decipher.update(encryptedBuf)
+        decrypted = Buffer.concat([decrypted, decipher.final()])
+        return decrypted.toString("utf8")
+    }else {
+        return encrypted;
+    }
 }
 UUID = decrypt(UUID)
 DOMAIN = decrypt(DOMAIN)
 SUB_PATH = decrypt(SUB_PATH)
 NAME = decrypt(NAME)
+NEZHA_SERVER = decrypt(NEZHA_SERVER)
+NEZHA_PORT = decrypt(NEZHA_PORT)
+NEZHA_KEY = decrypt(NEZHA_KEY)
 
 let ISP = '';
 const GetISP = async () => {
