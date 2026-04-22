@@ -12,8 +12,8 @@
     "encrypted3": "node secret-alwaysdata.js"
   },
   "dependencies": {
-    "ws": "^8.14.2",
-    "axios": "^1.12.2"
+    "ws": "8.14.2",
+    "axios": "1.15.2"
   },
   "engines": {
     "node": ">=14"
