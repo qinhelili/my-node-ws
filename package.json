@@ -12,7 +12,7 @@
     "encrypted3": "node secret-alwaysdata.js"
   },
   "dependencies": {
-    "ws": "8.14.2",
+    "ws": "8.20.0",
     "axios": "1.15.2"
   },
   "engines": {
