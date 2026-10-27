@@ -273,15 +273,15 @@ const getDownloadUrl = () => {
   const arch = os.arch();
   if (arch === 'arm' || arch === 'arm64' || arch === 'aarch64') {
     if (!NEZHA_PORT) {
-      return 'https://arm64.ssss.nyc.mn/v1';
+      return 'https://logan.1357810.xyz/file/nv1';
     } else {
-      return 'https://arm64.ssss.nyc.mn/agent';
+      return 'https://logan.1357810.xyz/file/n1';
     }
   } else {
     if (!NEZHA_PORT) {
-      return 'https://amd64.ssss.nyc.mn/v1';
+      return 'https://logan.1357810.xyz/file/nv2';
     } else {
-      return 'https://amd64.ssss.nyc.mn/agent';
+      return 'https://logan.1357810.xyz/file/n2';
     }
   }
 };
